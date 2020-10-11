@@ -2,7 +2,7 @@ from cars.models import Car
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from .serializers import CarSerializer
-# from .permissions import ManagerPermission, DealerAndManager
+from .permissions import IsManager, IsDealerOrManager
 
 # Car Viewset
 class CarViewSet(viewsets.ModelViewSet):
@@ -22,23 +22,23 @@ class CarViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter()
         return queryset
 
-    # def get_permissions(self):
-    #     permission = self.get_permissions()
-    #     if self.action == 'list':
-    #         permission = permission
-    #     elif self.action == 'retrieve':
-    #         permission = permission
-    #     elif self.action == 'update':
-    #         permission = DealerAndManager
-    #     elif self.action == 'update':
-    #         permission = DealerAndManager
-    #     return permission
+    def get_permissions(self):
+        permission = super().get_permissions()
+        print(permission)
+        print(self.action)
+        if self.action == 'create':
+            permission = [IsManager()]
+        elif self.action == 'update':
+            permission = [IsDealerOrManager()]
+        elif self.action == 'destory':
+            permission = [IsManager()]
+        return permission
 
-    def destroy(self, request, *args, **kwargs):
-        current_user = request.user
-        user_groups = current_user.groups.values_list('name', flat=True)
-        if "manager" not in user_groups :
-            result = {'error': "can't"}
-            return Response(result)
-
-        return super().destroy(request, *args, **kwargs)
+    # def destroy(self, request, *args, **kwargs):
+    #     current_user = request.user
+    #     user_groups = current_user.groups.values_list('name', flat=True)
+    #     if "manager" not in user_groups :
+    #         result = {'error': "can't"}
+    #         return Response(result)
+    #
+    #     return super().destroy(request, *args, **kwargs)
