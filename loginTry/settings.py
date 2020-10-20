@@ -45,12 +45,22 @@ INSTALLED_APPS = [
     'corsheaders',
     'knox',
     'loginapp',
-    'rest_framework.authtoken',
-    'rest_framework_expiring_authtoken',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':('knox.auth.TokenAuthentication',)
+}
+
+from datetime import timedelta
+from rest_framework.settings import api_settings
+REST_KNOX = {
+  'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
+  'AUTH_TOKEN_CHARACTER_LENGTH': 64,
+  'TOKEN_TTL': timedelta(hours=10),
+  'USER_SERIALIZER': 'knox.serializers.UserSerializer',
+  'TOKEN_LIMIT_PER_USER': None,
+  'AUTO_REFRESH': False,
+  'EXPIRY_DATETIME_FORMAT': api_settings.DATETME_FORMAT,
 }
 
 MIDDLEWARE = [
@@ -136,6 +146,5 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-EXPIRING_TOKEN_LIFESPAN = datetime.timedelta(days=1)
 STATIC_URL = '/static/'
 django_heroku.settings(locals())
