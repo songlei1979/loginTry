@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
+import datetime
 from pathlib import Path
 import django_heroku
 
@@ -43,7 +44,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'knox',
-    'loginapp'
+    'loginapp',
+    'rest_framework.authtoken',
+    'rest_framework_expiring_authtoken',
 ]
 
 REST_FRAMEWORK = {
@@ -133,6 +136,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
+EXPIRING_TOKEN_LIFESPAN = datetime.timedelta(days=1)
 STATIC_URL = '/static/'
 django_heroku.settings(locals())
