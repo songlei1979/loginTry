@@ -16,11 +16,9 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework_expiring_authtoken import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('cars.urls')),
     path('', include('loginapp.urls')),
-    url(r'^api-token-auth/', views.obtain_expiring_auth_token)
 ]
